@@ -261,8 +261,8 @@ bool YoloObjectDetector::publishDetectionImage(const cv::Mat& detectionImage)
   if (detectionImagePublisher_.getNumSubscribers() < 1)
     return false;
   cv_bridge::CvImage cvImage;
-  cvImage.header.stamp = ros::Time::now();
-  cvImage.header.frame_id = "detection_image";
+  cvImage.header.stamp = imageHeader_.stamp;
+  cvImage.header.frame_id = imageHeader_.frame_id;
   cvImage.encoding = sensor_msgs::image_encodings::BGR8;
   cvImage.image = detectionImage;
   detectionImagePublisher_.publish(*cvImage.toImageMsg());
@@ -612,8 +612,8 @@ void *YoloObjectDetector::publishInThread()
         }
       }
     }
-    boundingBoxesResults_.header.stamp = ros::Time::now();
-    boundingBoxesResults_.header.frame_id = "detection";
+    boundingBoxesResults_.header.stamp = imageHeader_.stamp;
+    boundingBoxesResults_.header.frame_id = imageHeader_.frame_id;
     boundingBoxesResults_.image_header = imageHeader_;
     boundingBoxesPublisher_.publish(boundingBoxesResults_);
   } else {
